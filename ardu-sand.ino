@@ -106,6 +106,7 @@ void setup ()
   cc_snd = display.color565 (red, green, blue);
   //prep screen for clock display
   //display.fillScreen (cc_snd);
+#if 0
   // Draw an obstacle for sand to move around
   for(uint8_t y=0; y<3; y++) {
     for(uint8_t x=0; x<3; x++) {
@@ -117,6 +118,7 @@ void setup ()
       debug_println (cc_snd);
     }
   }
+#endif
   sand.randomize(); // Initialize random sand positions
   //init colors
   dimension_t x, y;
@@ -138,17 +140,6 @@ void setup ()
   {
     imu.enableDefault();
     have_imu = 1;
-  }
-  else
-  {
-    //try crossed wires
-    delay (1000);
-    Wire.begin (SCL_PIN, SDA_PIN);
-    if (imu.init())
-    {
-      imu.enableDefault();
-      have_imu = 1;
-    }
   }
   //done setup
 }
@@ -400,11 +391,11 @@ void loop ()
   if (have_imu)
   {
     imu.read();
-    sand.iterate (imu.a.y, imu.a.x, imu.a.z);
+    sand.iterate (imu.a.y, imu.a.x, -imu.a.z);
   }
   else
   {
-    sand.iterate (1000, 1000, 1000);
+    //sand.iterate (1000, 1000, 1000);
   }
 
   // Draw new grain positions in pixelBuf[]
